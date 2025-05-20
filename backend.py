@@ -32,14 +32,14 @@ class RequestState(BaseModel):
 
 ALLOWED_MODEL_NAMES=["llama-3.3-70b-versatile", "mixtral-8x7b-32768"]  # Groq models
 
-app=FastAPI(title="LangGraph AI Agent")
+app = FastAPI(title="LangGraph AI Agent")
 
 # Add CORS middleware with more permissive settings
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],  # Explicitly allow OPTIONS
+    allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],
     expose_headers=["*"]
 )
@@ -100,4 +100,4 @@ async def chat_endpoint(request: RequestState):
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
