@@ -22,12 +22,9 @@ wheels/
 
 # Virtual Environment
 venv/
-env/
 ENV/
+env/
 .env
-.venv
-env.bak/
-venv.bak/
 
 # IDE
 .idea/
@@ -35,10 +32,6 @@ venv.bak/
 *.swp
 *.swo
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # Logs
 *.log
@@ -46,74 +39,37 @@ logs/
 log/
 
 # Local development
-.env
 .env.local
-.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Dependencies
 node_modules/
 package-lock.json
 yarn.lock
+Pipfile
+Pipfile.lock
+.python-version
 
-# Build files
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-*.dylib
-*.dll
-
-# Coverage reports
-htmlcov/
-.tox/
+# Testing
 .coverage
-.coverage.*
-.cache
-nosetests.xml
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
 coverage.xml
 *.cover
 .hypothesis/
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# pipenv
-Pipfile.lock
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# pytest
-.pytest_cache/
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
+# Distribution
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
+build/
 *.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
-# Backup files
-*.bak
-*.backup
-*~
-*.swp
-*.swo
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
