@@ -44,6 +44,24 @@ app.add_middleware(
     expose_headers=["*"]
 )
 
+@app.get("/")
+async def root():
+    return {
+        "status": "ok",
+        "message": "AI Task Planner API is running",
+        "endpoints": {
+            "chat": "/chat",
+            "health": "/health"
+        }
+    }
+
+@app.get("/health")
+async def health_check():
+    return {
+        "status": "healthy",
+        "version": "1.0.0"
+    }
+
 @app.options("/chat")
 async def options_chat():
     return {"status": "ok"}
