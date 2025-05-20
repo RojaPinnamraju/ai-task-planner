@@ -101,21 +101,3 @@ This project is a full-stack AI chatbot application using a FastAPI backend and 
     ```
 
 ---
-
-## Security & Best Practices
-- **Never commit your `.env` file or API keys to GitHub.**
-- Use `.gitignore` to exclude secrets, venv, and cache files.
-- Set environment variables in Render/Netlify dashboards for production.
-
----
-
-## Credits
-- Built with [FastAPI](https://fastapi.tiangolo.com/), [Uvicorn](https://www.uvicorn.org/), [Langchain](https://python.langchain.com/), and modern web technologies.
-
----
-
-## License
-MIT (or your preferred license)
-
-
-
