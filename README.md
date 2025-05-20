@@ -1,103 +1,121 @@
-# 🧠 AI Task Planner & Personal Assistant
+# AI Agent Chatbot with FastAPI & Modern Frontend
 
-A powerful AI-powered task planning and personal assistant application that helps you organize, prioritize, and get smart suggestions for your tasks. Built with Streamlit for the frontend and FastAPI for the backend, this application leverages cutting-edge AI models from Groq and OpenAI to provide intelligent task management solutions.
+This project is a full-stack AI chatbot application using a FastAPI backend and a modern static HTML/JS frontend. The backend integrates with Groq and Tavily APIs for LLM and search capabilities. The frontend is designed for easy deployment on Netlify, while the backend is ready for Render or similar cloud platforms.
 
-## ✨ Features
+---
 
-- **Smart Task Planning**: Get AI-generated structured plans for your tasks
-- **Multiple AI Providers**: Choose between Groq and OpenAI models
-- **Customizable Assistant**: Define your assistant's behavior through system prompts
-- **Web Search Integration**: Enable web search for enhanced task planning
-- **Modern UI**: Clean and intuitive interface built with Streamlit
-- **Flexible Model Selection**: Support for various AI models:
-  - Groq: llama-3.3-70b-versatile, mixtral-8x7b-32768
-  - OpenAI: gpt-4o-mini
+## Features
+- **FastAPI** backend with CORS enabled
+- **LLM integration** (Groq, Tavily)
+- **Modern, responsive frontend** (HTML/CSS/JS)
+- **Markdown-formatted AI responses**
+- **Environment variable support** for API keys
+- **Easy deployment**: Backend on Render, frontend on Netlify
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
-
-- Python 3.8 or higher
-- pip or pipenv for package management
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone [repository-url]
-cd ai-agent-chatbot-copy
+## Project Structure
+```
+├── ai_agent.py         # Core AI agent logic
+├── backend.py          # FastAPI backend API
+├── index.html          # Frontend (static, deploy to Netlify)
+├── requirements.txt    # Python dependencies
+├── .gitignore          # Ignore secrets, venv, etc.
+├── Pipfile / Pipfile.lock (optional)
+└── Readme.md           # This file
 ```
 
-2. Install dependencies:
-```bash
-# Using pip
-pip install -r requirements.txt
+---
 
-# Or using pipenv
-pipenv install
-```
+## Local Development
 
-3. Set up environment variables:
-Create a `.env` file in the root directory with the following variables:
-```
-OPENAI_API_KEY=your_openai_api_key
-GROQ_API_KEY=your_groq_api_key
-```
+### 1. Backend (FastAPI)
+1. **Create and activate a virtual environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Create a `.env` file** in the project root:
+   ```env
+   GROQ_API_KEY=your_groq_api_key
+   TAVILY_API_KEY=your_tavily_api_key
+   ```
+4. **Run the backend:**
+   ```bash
+   python backend.py
+   ```
+   The API will be available at `http://127.0.0.1:10000` (or as configured).
 
-### Running the Application
+### 2. Frontend (Static HTML/JS)
+- Open `index.html` directly in your browser for local testing.
+- **For production:** Deploy to Netlify (see below).
 
-1. Start the backend server:
-```bash
-python backend.py
-```
+---
 
-2. In a new terminal, start the frontend:
-```bash
-streamlit run frontend.py
-```
+## Deployment
 
-3. Open your browser and navigate to `http://localhost:8501`
+### Backend (Render)
+1. Push your code to GitHub.
+2. On [Render](https://dashboard.render.com/):
+   - New Web Service → Connect repo
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn backend:app --host 0.0.0.0 --port 10000`
+   - **Port:** `10000`
+   - Add environment variables (`GROQ_API_KEY`, `TAVILY_API_KEY`)
+3. Deploy and note your public backend URL (e.g., `https://your-backend.onrender.com`).
 
-## 🛠️ Project Structure
+### Frontend (Netlify)
+1. Place `index.html` (and any assets) in a folder (e.g., `frontend-dist`).
+2. In `index.html`, set:
+   ```js
+   const API_URL = 'https://your-backend.onrender.com/chat';
+   ```
+3. Push to GitHub.
+4. On [Netlify](https://app.netlify.com/):
+   - New site from Git → Connect repo
+   - Set publish directory to your frontend folder
+   - Deploy
+5. Your site will be live at `https://your-frontend.netlify.app`.
 
-- `frontend.py`: Streamlit-based user interface
-- `backend.py`: FastAPI backend server
-- `ai_agent.py`: Core AI agent implementation
-- `styles.css`: Custom styling for the application
-- `requirements.txt`: Python dependencies
-- `.env`: Environment variables configuration
+---
 
-## 🤖 How to Use
+## API Usage
+- **POST** `/chat`
+  - Request body:
+    ```json
+    {
+      "model_name": "llama-3.3-70b-versatile",
+      "model_provider": "Groq",
+      "system_prompt": "act as a teacher",
+      "messages": ["What is Python programming?"],
+      "allow_search": true
+    }
+    ```
+  - Response:
+    ```json
+    { "response": "...AI response..." }
+    ```
 
-1. Define your assistant's behavior in the system prompt text area
-2. Select your preferred AI provider (Groq or OpenAI)
-3. Choose a specific model from the available options
-4. Enable web search if needed
-5. Enter your tasks (one per line)
-6. Click "Generate Plan" to get AI-generated task planning suggestions
+---
 
-## 📝 Example
+## Security & Best Practices
+- **Never commit your `.env` file or API keys to GitHub.**
+- Use `.gitignore` to exclude secrets, venv, and cache files.
+- Set environment variables in Render/Netlify dashboards for production.
 
-Input tasks:
-```
-- Finish project proposal
-- Buy groceries
-- Schedule team meeting
-```
+---
 
-The AI will generate a structured plan with:
-- Prioritized tasks
-- Suggested timeframes
-- Additional recommendations
-- Potential dependencies between tasks
+## Credits
+- Built with [FastAPI](https://fastapi.tiangolo.com/), [Uvicorn](https://www.uvicorn.org/), [Langchain](https://python.langchain.com/), and modern web technologies.
 
-## 🔧 Technologies Used
+---
 
-- **Frontend**: Streamlit
-- **Backend**: FastAPI
-- **AI Integration**: 
-  - Groq API
-  - OpenAI API
-  - LangChain
-- **Styling**: CSS
-- **Environment Management**: python-dotenv
+## License
+MIT (or your preferred license)
+
+
+
