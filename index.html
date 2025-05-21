@@ -184,11 +184,6 @@
     <div class="container">
         <textarea id="systemPrompt" placeholder="Define your AI Agent: Type your system prompt here..."></textarea>
         <div>
-            <label>Select Provider:</label>
-            <input type="radio" name="provider" value="Groq" checked> Groq
-            <input type="radio" name="provider" value="OpenAI"> OpenAI
-        </div>
-        <div>
             <label>Select Model:</label>
             <select id="modelSelect">
                 <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
@@ -214,7 +209,6 @@
 
         function askAgent() {
             const systemPrompt = document.getElementById('systemPrompt').value;
-            const provider = document.querySelector('input[name="provider"]:checked').value;
             const selectedModel = document.getElementById('modelSelect').value;
             const allowWebSearch = document.getElementById('allowWebSearch').checked;
             const userQuery = document.getElementById('userQuery').value;
@@ -230,7 +224,6 @@
 
             const payload = {
                 model_name: selectedModel,
-                model_provider: provider,
                 system_prompt: systemPrompt,
                 messages: [userQuery],
                 allow_search: allowWebSearch
