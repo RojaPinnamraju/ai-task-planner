@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class RequestState(BaseModel):
     model_name: str
-    model_provider: str
+    model_provider: str = "Groq"  # Set default value to Groq
     system_prompt: Optional[str] = ""
     messages: List[str]
     allow_search: bool = False
