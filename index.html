@@ -257,6 +257,113 @@
             width: 100%;
             text-align: center;
         }
+
+        .feedback-container {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .rating-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+
+        .rating-emoji {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            opacity: 0.5;
+        }
+
+        .rating-emoji:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+
+        .rating-emoji.selected {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feedback-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-input:focus {
+            border: 1.5px solid var(--primary-color);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .feedback-submit {
+            padding: 8px 16px;
+            background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99,102,241,0.20);
+        }
+
+        .feedback-cancel {
+            padding: 8px 16px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-cancel:hover {
+            transform: translateY(-2px);
+            background: var(--card-bg);
+        }
+
+        .feedback-thanks {
+            text-align: center;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -284,6 +391,25 @@
         <button onclick="askAgent()">Ask Agent!</button>
         <div id="loading" class="loading-spinner" style="display:none;"></div>
         <div id="response" class="response"></div>
+        <div id="feedback" class="feedback-container">
+            <div class="rating-container">
+                <span class="rating-emoji" data-rating="1">😞</span>
+                <span class="rating-emoji" data-rating="2">😐</span>
+                <span class="rating-emoji" data-rating="3">😊</span>
+                <span class="rating-emoji" data-rating="4">😄</span>
+                <span class="rating-emoji" data-rating="5">🤩</span>
+            </div>
+            <div class="feedback-form">
+                <textarea class="feedback-input" placeholder="Share your thoughts about this response (optional)"></textarea>
+                <div class="feedback-buttons">
+                    <button class="feedback-cancel" onclick="hideFeedback()">Cancel</button>
+                    <button class="feedback-submit" onclick="submitFeedback()">Submit Feedback</button>
+                </div>
+            </div>
+            <div class="feedback-thanks">
+                Thank you for your feedback! 🙏
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -305,6 +431,57 @@
         const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://127.0.0.1:10000/chat'
             : 'https://ai-task-planner.onrender.com/chat';
+
+        let currentRating = 0;
+        let currentResponse = '';
+
+        function showFeedback() {
+            document.getElementById('feedback').style.display = 'block';
+            document.querySelector('.feedback-form').style.display = 'flex';
+            document.querySelector('.feedback-thanks').style.display = 'none';
+            document.querySelectorAll('.rating-emoji').forEach(emoji => {
+                emoji.classList.remove('selected');
+            });
+            currentRating = 0;
+        }
+
+        function hideFeedback() {
+            document.getElementById('feedback').style.display = 'none';
+        }
+
+        function submitFeedback() {
+            const feedbackText = document.querySelector('.feedback-input').value;
+            const feedback = {
+                rating: currentRating,
+                feedback: feedbackText,
+                response: currentResponse,
+                timestamp: new Date().toISOString()
+            };
+
+            // Store feedback in localStorage
+            const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+            feedbacks.push(feedback);
+            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+            // Show thank you message
+            document.querySelector('.feedback-form').style.display = 'none';
+            document.querySelector('.feedback-thanks').style.display = 'block';
+
+            // Clear form
+            document.querySelector('.feedback-input').value = '';
+            setTimeout(hideFeedback, 2000);
+        }
+
+        // Add click handlers for rating emojis
+        document.querySelectorAll('.rating-emoji').forEach(emoji => {
+            emoji.addEventListener('click', function() {
+                currentRating = parseInt(this.dataset.rating);
+                document.querySelectorAll('.rating-emoji').forEach(e => {
+                    e.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
 
         function askAgent() {
             const systemPrompt = document.getElementById('systemPrompt').value;
@@ -349,7 +526,9 @@
                 if (data.error) {
                     responseDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
                 } else if (data.response) {
+                    currentResponse = data.response;
                     responseDiv.innerHTML = `<div class='response-label'>Final Response:</div><div class='markdown-body'>${marked.parse(data.response)}</div>`;
+                    showFeedback();
                 } else {
                     responseDiv.innerHTML = `<strong>Error:</strong> Unexpected response format: ${JSON.stringify(data)}`;
                 }
